@@ -1,0 +1,11 @@
+# HELP ollama_last_ttft_seconds Time to first token
+# TYPE ollama_last_ttft_seconds gauge
+ollama_last_ttft_seconds{model="qwen:1.8b"} 0.7463
+
+# HELP ollama_last_tps Tokens per second
+# TYPE ollama_last_tps gauge
+ollama_last_tps{model="qwen:1.8b"} 8.55
+
+# HELP ollama_last_eval_count Tokens generated
+# TYPE ollama_last_eval_count gauge
+ollama_last_eval_count{model="qwen:1.8b"} 211
