@@ -1,15 +1,16 @@
 services:
    litellm:
-     image: docker.litellm.ai/berriai/litellm:main-stable
+     image: ghcr.io/berriai/litellm:main-stable
      container_name: lite_llm
      ports:
       - "4000:4000"
      extra_hosts:
       - "host.docker.internal:host-gateway"
-     enviromment:
-      - LITELLM_MASTER_KEY: "qwertyuiop" 
+     environment:
+       LITELLM_MASTER_KEY: "qwertyuiop" 
      volumes:
       - ./litellm_config.yaml:/app/config.yaml
      command:
       - --config
       - /app/config.yaml
+      - --detailed_debug
