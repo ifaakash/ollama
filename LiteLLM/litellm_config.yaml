@@ -3,3 +3,6 @@ model_list:
     litellm_params:
       model: ollama/qwen:1.8b
       api_base: http://host.docker.internal:11434
+      
+general_settings:
+  database_url: os.environ/DATABASE_URL 
