@@ -11,3 +11,4 @@ services:
             memory: 120M
           reservations:
             memory: 80M
+    network_mode: host
