@@ -3,7 +3,7 @@ import json
 from prometheus import get_temp  # Assumes prometheus.py has get_temp()
 
 OLLAMA_URL = "http://localhost:11434/api/chat"
-MODEL = "qwen:1.8b"
+MODEL = "qwen2.5:1.5b"
 
 def run_agent(user_prompt):
     # 1. Setup the Conversation and Tool Definitions
@@ -36,6 +36,7 @@ def run_agent(user_prompt):
             response.raise_for_status()
 
         result = response.json()
+        print(result)
         print(f"#"*50)
         message = result.get('message', {})
 
