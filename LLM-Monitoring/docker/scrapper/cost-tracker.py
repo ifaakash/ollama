@@ -2,7 +2,7 @@ import time
 
 import requests
 
-LITELLM_URL = "http://100.76.6.76:4000/spend/logs"
+LITELLM_URL = "http://localhost:4000/spend/logs"
 API_KEY = "qwertyuiop"
 PARAMS = {"api_key": API_KEY, "summarize": "true"}
 HEADERS = {"accept": "application/json", "x-litellm-api-key": API_KEY}

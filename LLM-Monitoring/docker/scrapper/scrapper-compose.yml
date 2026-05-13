@@ -5,6 +5,10 @@ services:
       - /sys/class/thermal/thermal_zone0/temp:/sys/class/thermal/thermal_zone0/temp:ro
       - /home/ubuntu/ollama/LLM-Monitoring/textfile_collector/local-metrics.prom:/home/ubuntu/ollama/LLM-Monitoring/textfile_collector/local-metrics.prom:rw
       - /proc/meminfo:/proc/meminfo:ro
+    ports:
+     - "4000:4000"
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
     deploy:
         resources:
           limits:
