@@ -1,11 +1,11 @@
 # HELP pi5_custom_temperature_celsius Pi 5 CPU Temperature
 # TYPE pi5_custom_temperature_celsius gauge
-pi5_custom_temperature_celsius 47.95
+pi5_custom_temperature_celsius 49.6
 
 # HELP pi5_custom_ram_used_bytes Pi 5 RAM Used
 # TYPE pi5_custom_ram_used_bytes gauge
-pi5_custom_ram_used_bytes 2385260544
+pi5_custom_ram_used_bytes 2713661440
 
 # HELP ollama_custom_model_memory_bytes Total memory used by loaded Ollama models
 # TYPE ollama_custom_model_memory_bytes gauge
-ollama_custom_model_memory_bytes 0
+ollama_custom_model_memory_bytes 1097538048

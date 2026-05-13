@@ -1,0 +1,7 @@
+# HELP llm_prompt_tokens_total Total input tokens.
+# TYPE llm_prompt_tokens_total counter
+llm_prompt_tokens_total{model="ollama/qwen:1.8b",api_key="qwertyuiop"} 75
+
+# HELP llm_completion_tokens_total Total output tokens.
+# TYPE llm_completion_tokens_total counter
+llm_completion_tokens_total{model="ollama/qwen:1.8b",api_key="qwertyuiop"} 726
