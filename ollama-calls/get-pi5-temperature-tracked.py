@@ -1,30 +1,25 @@
-import ollama 
-import subprocess
 import json
+import subprocess
+
+import ollama
 
 amodel = "qwen2.5:1.5b"
 amessages = [
-    {
-        'role': 'user',
-        'content': 'What is the system temperature for raspberry pi?'
-    }
+    {"role": "user", "content": "What is the system temperature for raspberry pi?"}
 ]
 
-def get_temp(username: str = 'anonymous', **kwargs):
+
+def get_temp(username: str = "anonymous", **kwargs):
     try:
         result = subprocess.run(
-            ["vcgencmd", "measure_temp"], 
-            capture_output=True, 
-            text=True, 
-            check=True
+            ["vcgencmd", "measure_temp"], capture_output=True, text=True, check=True
         )
         return result.stdout.strip()
-    except (FileNotFoundError, subprocess.CalledProcessError):
+    except FileNotFoundError, subprocess.CalledProcessError:
         return "temp=45.2'C (Simulated)"
 
-available_tools = {
-    'get_temp': get_temp
-}
+
+available_tools = {"get_temp": get_temp}
 
 # Step 1: Initial call to Ollama
 print(">> Sending initial prompt to Ollama...")
@@ -33,23 +28,23 @@ response = ollama.chat(
     messages=amessages,
     tools=[
         {
-            'type': 'function',
-            'function': {
-                'name': 'get_temp',
-                'description': 'Get temperature of raspberry pi',
-                'parameters': {
-                    'type': 'object',
-                    'properties': {
-                        'username': {
-                            'type': 'string',
-                            'description': 'Name of user executing this command'
+            "type": "function",
+            "function": {
+                "name": "get_temp",
+                "description": "Get temperature of raspberry pi",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "username": {
+                            "type": "string",
+                            "description": "Name of user executing this command",
                         }
                     },
-                    'required': ['username']
-                }
-            }
+                    "required": ["username"],
+                },
+            },
         }
-    ]
+    ],
 )
 
 print("\n--- INITIAL RESPONSE RECEIVED ---")
@@ -63,36 +58,34 @@ if response.message.tool_calls:
     # Print list BEFORE append
     print("--- BEFORE APPEND ---")
     print(json.dumps(amessages, indent=2, default=str))
-    
+
     # Do the append
     amessages.append(response.message)
-    
+
     # Print list AFTER append
     print("\n--- AFTER APPEND ---")
     print(json.dumps(amessages, indent=2, default=str))
-    
+
     # Process each requested tool call
     for tool_call in response.message.tool_calls:
         func_name = tool_call.function.name
         func_args = tool_call.function.arguments
-        
+
         if func_name in available_tools:
             tool_output = available_tools[func_name](**func_args)
-            
+
             print("\n========================================================")
             print(f"APPEND 2: Appending Tool Output for '{func_name}'")
             print("========================================================")
             # Print list BEFORE append
             print("--- BEFORE APPEND ---")
             print(json.dumps(amessages, indent=2, default=str))
-            
+
             # Do the append
-            amessages.append({
-                'role': 'tool',
-                'name': func_name,
-                'content': tool_output
-            })
-            
+            amessages.append(
+                {"role": "tool", "name": func_name, "content": tool_output}
+            )
+
             # Print list AFTER append
             print("\n--- AFTER APPEND ---")
             print(json.dumps(amessages, indent=2, default=str))
@@ -101,11 +94,8 @@ if response.message.tool_calls:
 
     # Step 3: Final call to Ollama with completed history
     print("\n>> Sending fully-appended history back to Ollama for interpretation...")
-    final_response = ollama.chat(
-        model=amodel,
-        messages=amessages
-    )
-    
+    final_response = ollama.chat(model=amodel, messages=amessages)
+
     print("\n--- FINAL AI RESPONSE ---")
     print(final_response.message.content)
 else:
