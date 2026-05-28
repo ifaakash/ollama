@@ -5,9 +5,9 @@ import os
 
 # --- Configuration ---
 OLLAMA_URL = "http://localhost:11434/api/ps"
-# Replace with the actual path your Node Exporter is watching
-METRIC_FILE = "/home/ubuntu/ollama/LLM-Monitoring/textfile_collector/local-metrics.prom"
-# METRIC_FILE = "/var/lib/prometheus/node-exporter/ollama_metrics.prom"
+# Replace with the actual paths your Node Exporter is watching
+HW_METRIC_FILE = "/home/ubuntu/ollama/LLM-Monitoring/textfile_collector/local-metrics.prom"
+LLM_METRIC_FILE = "/home/ubuntu/ollama/LLM-Monitoring/textfile_collector/ollama-metrics.prom"
 # Polling interval in seconds
 INTERVAL = 15
 
@@ -49,31 +49,48 @@ def get_ollama_memory():
         # Returns 0 if Ollama is down or no models are loaded
         return 0
 
+def write_metric_atomic(file_path: str, payload: str):
+    """Writes a metric payload atomically to prevent Node Exporter from reading partially-written files."""
+    try:
+        temp_file = file_path + ".tmp"
+        # Ensure parent directories exist
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(temp_file, "w") as f:
+            f.write(payload)
+        # Atomic rename prevents Node Exporter from reading a half-written file
+        os.replace(temp_file, file_path)
+    except Exception as e:
+        print(f"Error writing to {file_path}: {e}")
+
 def main():
-    print(f"Starting custom metrics exporter... Writing to {METRIC_FILE}")
+    print(f"Starting custom metrics exporter...")
+    print(f"Writing Hardware metrics to: {HW_METRIC_FILE}")
+    print(f"Writing Ollama metrics to: {LLM_METRIC_FILE}")
+    
     while True:
         temp = get_pi_temp()
         ram_used = get_ram_usage()
         ollama_mem = get_ollama_memory()
 
-        metrics_payload = f"""# HELP pi5_custom_temperature_celsius Pi 5 CPU Temperature
+        # 1. Hardware Metrics Payload
+        hw_payload = f"""# HELP pi5_custom_temperature_celsius Pi 5 CPU Temperature
 # TYPE pi5_custom_temperature_celsius gauge
 pi5_custom_temperature_celsius {temp}
 
 # HELP pi5_custom_ram_used_bytes Pi 5 RAM Used
 # TYPE pi5_custom_ram_used_bytes gauge
 pi5_custom_ram_used_bytes {ram_used}
+"""
 
-# HELP ollama_custom_model_memory_bytes Total memory used by loaded Ollama models
+        # 2. Ollama / LLM Metrics Payload
+        llm_payload = f"""# HELP ollama_custom_model_memory_bytes Total memory used by loaded Ollama models
 # TYPE ollama_custom_model_memory_bytes gauge
 ollama_custom_model_memory_bytes {ollama_mem}
 """
-        # Write to temporary file first
-        with open(METRIC_FILE, "w") as f:
-            f.write(metrics_payload)
-        
-        # Atomic rename prevents Node Exporter from reading a half-written file
-        # os.rename(METRIC_FILE_TMP, METRIC_FILE)
+
+        # Write each file atomically
+        write_metric_atomic(HW_METRIC_FILE, hw_payload)
+        write_metric_atomic(LLM_METRIC_FILE, llm_payload)
         
         time.sleep(INTERVAL)
 
