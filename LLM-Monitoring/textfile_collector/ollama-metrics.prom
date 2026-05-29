@@ -1,0 +1,5 @@
+
+    # HELP ollama_token_per_second Ollama Token per Second count
+    # TYPE ollama_token_per_second gauge
+    ollama_token_per_second 10.759787322773573
+    
