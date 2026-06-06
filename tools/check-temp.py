@@ -34,7 +34,7 @@ messages = [
 # 3. Make the initial call to the local model
 # We pass our Python function directly into the 'tools' array
 # Note: Ensure you are using a model that supports tool calling, like llama3.1 or qwen2.5-coder
-model_name = "llama3.1" 
+model_name = "qwen2.5:1.5b"
 
 print(">> Sending prompt to LLM...")
 response = ollama.chat(
