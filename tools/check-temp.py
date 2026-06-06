@@ -43,6 +43,9 @@ response = ollama.chat(
     tools=[get_pi_temperature] 
 )
 
+print(">> Output response from Ollama...")
+print(response)
+
 # Append the model's internal thought process/tool request to the context window
 messages.append(response.message)
 
