@@ -7,10 +7,14 @@ RUN apt-get update && apt-get install -y \
    curl \
    bash \
    python3 \
-   build-essentials \
+   build-essential \
    && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g @google/gemini-cli
+
+RUN useradd -m -s /bin/bash sandboxuser
+
+USER sandboxuser
 
 WORKDIR /workspace
 

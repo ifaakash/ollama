@@ -2,10 +2,10 @@ services:
   gemini-sandbox:
     build:
      context: .
-     dockerfile: 
-    image: 
-    container_name:
+     dockerfile: gemini-sdbx.Dockerfile
+    image: gemini-sandbox
+    container_name: gemini-sandbox
     volumes:
-     - ./:/workspace
+     - /Users/aakashmac/DevOps/Github/ollama/sandbox/:/workspace
     environment:
      GEMINI_API_KEY: ${GEMINI_API_KEY}
