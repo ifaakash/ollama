@@ -1,35 +1,29 @@
 import requests
+import ollama
 
-OLLAMA_URL = "http://localhost:11434/api/chat"
-MODEL = "qwen2.5:1.5b"
+OLLAMA_URL="http://localhost:11434/api/chat"
+MODEL="qwen2.5:1.5b"
+PROMPT="Hey ollama! Can you say Hi to me? in a funny way"
 
-# 1. Setup the message history
-messages = [
-    {"role": "user", "content": "Hey Ollama! My name is Aakash. Just saying hello!"}
-]
-
-payload = {
-    "model": MODEL,
-    "messages": messages,
-    "stream": False,
-    "options": {
-        "temperature": 0.7
+payload= {
+    'model': MODEL,
+    'stream': False,
+    'messages': [
+        { 'role': 'user', 'content': PROMPT }
+    ],
+    'format': 'json',
+    'keep_alive': '30m',
+    'options': {
+        'temperature': 0.7
     }
 }
 
-print(f"Sending chat request to {MODEL}...\n" + "-"*50)
-
 try:
-    response = requests.post(OLLAMA_URL, json=payload)
-    response.raise_for_status()
-    
-    api_response = response.json()
-    
-    # 2. Extract the AI's reply from the message object
-    ai_reply = api_response.get("message", {}).get("content", "")
-    
-    print("\n--- AI Response ---")
-    print(ai_reply)
+  response = requests.post(OLLAMA_URL, json=payload)
+  if response.status_code == 200:
+    print(f"The response is: ", response.json())
+  else:
+    printf(response.status_code)
 
-except requests.exceptions.RequestException as e:
-    print(f"API Request failed: {e}")
+except Exception as e:
+  print("Got exception: ", {e})
