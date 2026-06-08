@@ -1,0 +1,11 @@
+services:
+  gemini-sandbox:
+    build:
+     context: .
+     dockerfile: 
+    image: 
+    container_name:
+    volumes:
+     - ./:/workspace
+    environment:
+     GEMINI_API_KEY: ${GEMINI_API_KEY}
