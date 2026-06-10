@@ -3,7 +3,13 @@ import ollama
 
 OLLAMA_URL="http://localhost:11434/api/chat"
 MODEL="qwen2.5:1.5b"
-PROMPT="Hey ollama! Can you say Hi to me? in a funny way"
+PROMPT = """
+Hey ollama! My name is Aakash. 
+Please respond with a funny and short greeting message! Like wassup bro! keep a funny tone in all the chat
+You must output your response in JSON format with the following keys:
+- "user_name": the name of the user
+- "greeting": your response message
+"""
 
 payload= {
     'model': MODEL,
