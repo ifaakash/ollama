@@ -3,7 +3,7 @@ import requests
 
 amodel = 'qwen2.5:1.5b'
 aprompt = """
-What is the temperature of raspberry pi? You must output your response in JSON format with the following keys:
+What is the temperature of raspberry pi? Use the tool mentioned in the tool calls. You must output your response in JSON format with the following keys:
 - "user_name": the name of the user
 - "greeting": your response message
 """
@@ -20,7 +20,6 @@ response = ollama.chat(
     ],
     stream=False,
     keep_alive='60m',
-    format='json',
     # options={},
     tools=[
         {
@@ -43,4 +42,19 @@ response = ollama.chat(
     ]
 )
 
-print(response)
+def get_temp():
+ return "Temperatue is 50 degree celsius"
+
+print(response['message']['tool_calls'])
+
+if response.message.tool_calls:
+ print("TOOL CALL DETECTED")
+ tool_name = response.message.tool_calls[0].function.name
+ if tool_name == 'get_temp':
+   output=  get_temp()
+   aprompt.append(output)
+ else:
+  print(f"${tool_name} tool called") 
+else:
+ print("TRY BETTER!")
+
