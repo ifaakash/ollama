@@ -9,3 +9,4 @@ services:
      - ${LOCAL_DIRECTORY_PATH}:/workspace
     environment:
      GEMINI_API_KEY: ${GEMINI_API_KEY}
+     GEMINI_CLI_TRUST_WORKSPACE: "true"
