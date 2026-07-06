@@ -6,7 +6,8 @@ services:
     image: gemini-sandbox
     container_name: gemini-sandbox
     volumes:
-     - ${LOCAL_DIRECTORY_PATH}:/workspace
+     - /Users/aakashmac/DevOps/Github/QuickSpin/:/workspace/QuickSpin
+     - /Users/aakashmac/DevOps/Github/Terraform/:/workspace/Terraform
     environment:
      GEMINI_API_KEY: ${GEMINI_API_KEY}
      GEMINI_CLI_TRUST_WORKSPACE: "true"
