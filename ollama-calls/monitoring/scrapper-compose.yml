@@ -1,0 +1,19 @@
+services:
+  scrapper:
+    image: ollama-metric-scrapper
+    container_name: local-metric-scrapper
+    volumes:
+      - /sys/class/thermal/thermal_zone0/temp:/sys/class/thermal/thermal_zone0/temp:ro
+      - /home/ubuntu/ollama/LLM-Monitoring/textfile_collector/:/home/ubuntu/ollama/LLM-Monitoring/textfile_collector/:rw
+      - /proc/meminfo:/proc/meminfo:ro
+    ports:
+     - "4000:4000"
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
+    deploy:
+        resources:
+          limits:
+            memory: 120M
+          reservations:
+            memory: 80M
+    network_mode: host
