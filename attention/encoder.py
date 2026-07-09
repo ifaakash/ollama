@@ -11,3 +11,6 @@ enc = tiktoken.get_encoding("o200k_base")
 
 encoded= enc.encode(prompt)
 print(encoded)
+
+
+print(len(encoded))

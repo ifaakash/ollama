@@ -18,7 +18,7 @@ payload= {
         { 'role': 'user', 'content': PROMPT }
     ],
     'format': 'json',
-    'keep_alive': '30m',
+    'keep_alive': '60m',
     'options': {
         'temperature': 0.7
     }
@@ -27,7 +27,16 @@ payload= {
 try:
   response = requests.post(OLLAMA_URL, json=payload)
   if response.status_code == 200:
-    print(f"The response is: ", response.json())
+    response= response.json()
+    # print(f"The response is: ", response)
+    print(f"Message: ", response.get('message'))
+    print(f"Model:\t", response.get('model'))
+    print(f"Total duration:\t", response.get('total_duration')/1000000000)
+    print(f"Load duration:\t", response.get('load_duration')/1000000000)
+    print(f"Prompt Tokens count:\t", response.get('prompt_eval_count'))
+    print(f"Prompt evaluation duration :", response.get('prompt_eval_duration')/1000000000)
+    print(f"Output token count:\t", response.get('eval_count'))
+    print(f"Output token evaluation duration:\t", response.get('eval_duration')/1000000000)
   else:
     printf(response.status_code)
 
