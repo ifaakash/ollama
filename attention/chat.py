@@ -2,6 +2,7 @@ import requests
 import ollama
 
 OLLAMA_URL="http://localhost:11434/api/chat"
+METRIC_FILE = "/home/ubuntu/ollama/attention/monitoring/random-metric.prom"
 MODEL="qwen2.5:1.5b"
 PROMPT = """
 Hey ollama! My name is Aakash. 
@@ -27,16 +28,51 @@ payload= {
 try:
   response = requests.post(OLLAMA_URL, json=payload)
   if response.status_code == 200:
-    response= response.json()
-    # print(f"The response is: ", response)
-    print(f"Message: ", response.get('message'))
-    print(f"Model:\t", response.get('model'))
-    print(f"Total duration:\t", response.get('total_duration')/1000000000) # Total time spend during generation
-    print(f"Load duration:\t", response.get('load_duration')/1000000000) # Time spent loading the model
-    print(f"Prompt Tokens count:\t", response.get('prompt_eval_count')) # Number of tokens in the prompt
-    print(f"Prompt evaluation duration :", response.get('prompt_eval_duration')/1000000000) # Time spent evaluating the prompt
-    print(f"Output token count:\t", response.get('eval_count')) # Number of tokens generated in the response    
-    print(f"Output token evaluation duration:\t", response.get('eval_duration')/1000000000) # Time spent generating tokens
+    data = response.json()
+    
+    # Extract data
+    message = data.get('message', {})
+    model = data.get('model', 'unknown')
+    
+    # Convert nanoseconds to seconds for Prometheus
+    total_duration_sec = data.get('total_duration', 0) / 1e9
+    load_duration_sec = data.get('load_duration', 0) / 1e9
+    prompt_eval_count = data.get('prompt_eval_count', 0)
+    prompt_eval_duration_sec = data.get('prompt_eval_duration', 0) / 1e9
+    eval_count = data.get('eval_count', 0)
+    eval_duration_sec = data.get('eval_duration', 0) / 1e9
+
+    print(f"Message: {message}")
+    print(f"Model: {model}")
+
+    metrics_payload = f"""
+# HELP ollama_request_total_duration_seconds Total time spent during generation
+# TYPE ollama_request_total_duration_seconds gauge
+ollama_request_total_duration_seconds{{model="{model}"}} {total_duration_sec}
+
+# HELP ollama_request_load_duration_seconds Time spent loading the model
+# TYPE ollama_request_load_duration_seconds gauge
+ollama_request_load_duration_seconds{{model="{model}"}} {load_duration_sec}
+
+# HELP ollama_prompt_eval_count Number of tokens in the prompt
+# TYPE ollama_prompt_eval_count gauge
+ollama_prompt_eval_count{{model="{model}"}} {prompt_eval_count}
+
+# HELP ollama_prompt_eval_duration_seconds Time spent evaluating the prompt
+# TYPE ollama_prompt_eval_duration_seconds gauge
+ollama_prompt_eval_duration_seconds{{model="{model}"}} {prompt_eval_duration_sec}
+
+# HELP ollama_eval_count Number of tokens generated in the response
+# TYPE ollama_eval_count gauge
+ollama_eval_count{{model="{model}"}} {eval_count}
+
+# HELP ollama_eval_duration_seconds Time spent generating tokens
+# TYPE ollama_eval_duration_seconds gauge
+ollama_eval_duration_seconds{{model="{model}"}} {eval_duration_sec}
+"""
+
+    with open(METRIC_FILE, "w") as f:
+        f.write(metrics_payload)
   else:
     printf(response.status_code)
 

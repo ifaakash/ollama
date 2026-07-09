@@ -1,0 +1,7 @@
+services:
+  hardware-monitoring:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    container_name: pi5-hardware-monitor
+    

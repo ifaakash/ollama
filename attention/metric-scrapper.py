@@ -6,7 +6,7 @@ import os
 # --- Configuration ---
 OLLAMA_URL = "http://localhost:11434/api/ps"
 # Replace with the actual path your Node Exporter is watching
-METRIC_FILE = "/home/ubuntu/ollama/LLM-Monitoring/textfile_collector/local-metrics.prom"
+METRIC_FILE = "/home/ubuntu/ollama/attention/monitoring/random-metric.prom"
 # METRIC_FILE = "/var/lib/prometheus/node-exporter/ollama_metrics.prom"
 # Polling interval in seconds
 INTERVAL = 15

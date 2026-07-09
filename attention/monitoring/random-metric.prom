@@ -1,6 +1,24 @@
-# TYPE pi5_custom_temperature_celsius gauge
-pi5_custom_temperature_celsius 700
 
-# HELP pi5_custom_ram_used_bytes Pi 5 RAM Used
-# TYPE pi5_custom_ram_used_bytes gauge
-pi5_custom_ram_used_bytes 180
+# HELP ollama_request_total_duration_seconds Total time spent during generation
+# TYPE ollama_request_total_duration_seconds gauge
+ollama_request_total_duration_seconds{model="qwen2.5:1.5b"} 5.071385119
+
+# HELP ollama_request_load_duration_seconds Time spent loading the model
+# TYPE ollama_request_load_duration_seconds gauge
+ollama_request_load_duration_seconds{model="qwen2.5:1.5b"} 0.203080797
+
+# HELP ollama_prompt_eval_count Number of tokens in the prompt
+# TYPE ollama_prompt_eval_count gauge
+ollama_prompt_eval_count{model="qwen2.5:1.5b"} 99
+
+# HELP ollama_prompt_eval_duration_seconds Time spent evaluating the prompt
+# TYPE ollama_prompt_eval_duration_seconds gauge
+ollama_prompt_eval_duration_seconds{model="qwen2.5:1.5b"} 0.097557822
+
+# HELP ollama_eval_count Number of tokens generated in the response
+# TYPE ollama_eval_count gauge
+ollama_eval_count{model="qwen2.5:1.5b"} 31
+
+# HELP ollama_eval_duration_seconds Time spent generating tokens
+# TYPE ollama_eval_duration_seconds gauge
+ollama_eval_duration_seconds{model="qwen2.5:1.5b"} 3.133279264
