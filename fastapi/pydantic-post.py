@@ -83,9 +83,7 @@ async def chat_stream(req: ChatRequest):
                         if not line:
                             continue
                         obj = json.loads(line)
-                        # ---- YOUR ONE LINE HERE ----
-                        yield obj["message"]["content"]
-                        # ----------------------------
+                        yield obj.get("message", {}).get("content", "")
         except Exception as e:
             yield f"\n[error: {e}]"
 
