@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from fastapi import FastAPI
+import requests 
 
 aollama_url="http://localhost:11434/api/chat"
 amodel="qwen2.5:1.5b"
@@ -23,7 +24,7 @@ def chat(req: ChatRequest):
         'messages': [
             { 'role': 'user', 'content': req.prompt }
         ],
-        'format': 'json',
+        # 'format': 'json',
         'keep_alive': '30m',
         'options': {
             'temperature': req.temperature
@@ -40,6 +41,6 @@ def chat(req: ChatRequest):
             message = data.get('message', {})
     except Exception as e:
         message = {"error": str(e)}
-    return {"response": message}
+    return {"response": message.get('content')}
     
 #    return {"received": req.prompt, "temp": req.temperature}
