@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from fastapi import FastAPI
 import requests 
 import time
+import asyncio
+import httpx
 
 aollama_url="http://localhost:11434/api/chat"
 amodel="qwen2.5:1.5b"
@@ -17,8 +19,14 @@ app = FastAPI()
 def read_root():
     return {"status": "alive"}
 
+@app.get("/sleep")
+async def sleep_test():
+    start = time.perf_counter()
+    await asyncio.sleep(8)
+    return {"latency_s": round(time.perf_counter() - start, 2)}
+
 @app.post("/chat")
-def chat(req: ChatRequest):
+async def chat(req: ChatRequest):
     apayload= {
         'model': amodel,
         'stream': False,
