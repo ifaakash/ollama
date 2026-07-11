@@ -42,6 +42,15 @@ try:
     eval_count = data.get('eval_count', 0)
     eval_duration_sec = data.get('eval_duration', 0) / 1e9
 
+
+    tps= eval_count/eval_duration_sec
+    tpot= eval_duration_sec/eval_count
+
+    prompt_input_tps= prompt_eval_duration_sec/prompt_eval_count
+
+    print(f"Prefill tps: ", prompt_input_tps*1000, 'token/sec')
+    # print(f"Decode: ", tpot*1000, 'ms')    
+
     print(f"Message: {message}")
     print(f"Model: {model}")
 

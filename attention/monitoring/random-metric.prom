@@ -1,11 +1,11 @@
 
 # HELP ollama_request_total_duration_seconds Total time spent during generation
 # TYPE ollama_request_total_duration_seconds gauge
-ollama_request_total_duration_seconds{model="qwen2.5:1.5b"} 5.071385119
+ollama_request_total_duration_seconds{model="qwen2.5:1.5b"} 4.195070715
 
 # HELP ollama_request_load_duration_seconds Time spent loading the model
 # TYPE ollama_request_load_duration_seconds gauge
-ollama_request_load_duration_seconds{model="qwen2.5:1.5b"} 0.203080797
+ollama_request_load_duration_seconds{model="qwen2.5:1.5b"} 0.200498441
 
 # HELP ollama_prompt_eval_count Number of tokens in the prompt
 # TYPE ollama_prompt_eval_count gauge
@@ -13,12 +13,12 @@ ollama_prompt_eval_count{model="qwen2.5:1.5b"} 99
 
 # HELP ollama_prompt_eval_duration_seconds Time spent evaluating the prompt
 # TYPE ollama_prompt_eval_duration_seconds gauge
-ollama_prompt_eval_duration_seconds{model="qwen2.5:1.5b"} 0.097557822
+ollama_prompt_eval_duration_seconds{model="qwen2.5:1.5b"} 0.112665469
 
 # HELP ollama_eval_count Number of tokens generated in the response
 # TYPE ollama_eval_count gauge
-ollama_eval_count{model="qwen2.5:1.5b"} 31
+ollama_eval_count{model="qwen2.5:1.5b"} 26
 
 # HELP ollama_eval_duration_seconds Time spent generating tokens
 # TYPE ollama_eval_duration_seconds gauge
-ollama_eval_duration_seconds{model="qwen2.5:1.5b"} 3.133279264
+ollama_eval_duration_seconds{model="qwen2.5:1.5b"} 2.575691122
