@@ -60,3 +60,33 @@ async def chat(req: ChatRequest):
     return {"response": message.get('content'), "latency_s": round(elapsed, 2)}
     
 #    return {"received": req.prompt, "temp": req.temperature}
+
+
+import json
+from fastapi.responses import StreamingResponse
+
+@app.post("/chat/stream")
+async def chat_stream(req: ChatRequest):
+    apayload = {
+        'model': amodel,
+        'stream': True,   # <-- the Ollama-side flip
+        'messages': [{'role': 'user', 'content': req.prompt}],
+        'keep_alive': '30m',
+        'options': {'temperature': req.temperature}
+    }
+
+    async def token_generator():
+        try:
+            async with httpx.AsyncClient(timeout=120) as client:
+                async with client.stream("POST", aollama_url, json=apayload) as response:
+                    async for line in response.aiter_lines():
+                        if not line:
+                            continue
+                        obj = json.loads(line)
+                        # ---- YOUR ONE LINE HERE ----
+                        yield obj["message"]["content"]
+                        # ----------------------------
+        except Exception as e:
+            yield f"\n[error: {e}]"
+
+    return StreamingResponse(token_generator(), media_type="text/plain")
