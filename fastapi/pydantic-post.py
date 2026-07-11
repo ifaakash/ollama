@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from fastapi import FastAPI
 import requests 
+import time
 
 aollama_url="http://localhost:11434/api/chat"
 amodel="qwen2.5:1.5b"
@@ -33,14 +34,21 @@ def chat(req: ChatRequest):
 
     # 1. Initialize your local variable with a safe default
     message = {"error": "Failed to get a response"}
-    
+    start = time.perf_counter()
     try:
-        response = requests.post(aollama_url, json=apayload)
-        if response.status_code == 200:
-            data = response.json()
-            message = data.get('message', {})
+        async with httpx.AsyncClient(timeout=120) as client:
+            response = await client.post(aollama_url, json=apayload)
+            if response.status_code == 200:
+                message = response.json().get('message', {})
+#    try:
+#        response = requests.post(aollama_url, json=apayload)
+#        if response.status_code == 200:
+#            elapsed = time.perf_counter() - start
+#            data = response.json()
+#            message = data.get('message', {})
     except Exception as e:
         message = {"error": str(e)}
-    return {"response": message.get('content')}
+    elapsed = time.perf_counter() - start
+    return {"response": message.get('content'), "latency_s": round(elapsed, 2)}
     
 #    return {"received": req.prompt, "temp": req.temperature}
