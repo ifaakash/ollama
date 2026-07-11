@@ -29,11 +29,17 @@ def chat(req: ChatRequest):
             'temperature': req.temperature
         }
     }
+
+    # 1. Initialize your local variable with a safe default
+    message = {"error": "Failed to get a response"}
     
     try:
         response = requests.post(aollama_url, json=apayload)
         if response.status_code == 200:
             data = response.json()
             message = data.get('message', {})
+    except Exception as e:
+        message = {"error": str(e)}
     return {"response": message}
+    
 #    return {"received": req.prompt, "temp": req.temperature}
