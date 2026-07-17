@@ -47,18 +47,16 @@ async def debug(req: ChatRequest):
         async with httpx.AsyncClient(timeout=120) as client:
             response = await client.post(aollama_url, json=apayload)
             if response.status_code == 200:
-                message = response.json().get('message', {})
-                print(message)
-#    try:
-#        response = requests.post(aollama_url, json=apayload)
-#        if response.status_code == 200:
-#            elapsed = time.perf_counter() - start
-#            data = response.json()
-#            message = data.get('message', {})
+                data = response.json()
+                llm_response = data.get("response", {})
+                result = {
+                    "promp_eval_count"= llm_response.get("prompt_eval_count",0 )
+                    "output_token_count" =  llm_response.get("eval_count",0)
+                }
     except Exception as e:
         message = {"error": str(e)}
     elapsed = time.perf_counter() - start
-    return {"response": message, "latency_s": round(elapsed, 2)}
+    return {"response": result, "latency_s": round(elapsed, 2)}
     
 
 @app.post("/chat")
