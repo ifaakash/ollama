@@ -59,7 +59,7 @@ async def debug(req: ChatRequest):
                 output_token_count =  data.get("eval_count",0)
                 aoutput_payload = f"""
 ollama_eval_count{{model="ollama"}} {output_token_count}
-ollama_prompt_eval_count{{model="ollama"}}  {promp_eval_count}
+ollama_prompt_eval_count{{model="ollama"}}  {prompt_eval_count}
                 """
                 try: 
                     with open(ametric_file, "w") as f:
