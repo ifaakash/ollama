@@ -50,14 +50,24 @@ async def debug(req: ChatRequest):
             if response.status_code == 200:
                 data = response.json()
                 print(data)
-                llm_response = data.get("response", {})
                 result = {
                     "message" : data.get("message", {}),
-                    "promp_eval_count" : data.get("prompt_eval_count",0),
+                    "prompt_eval_count" : data.get("prompt_eval_count",0),
                     "output_token_count" :  data.get("eval_count",0)
                 }
-                with open(ametric_file, "w") as f:
-                  f.write('ollama_eval_count_for_output ', data.get("eval_count",0))
+                prompt_eval_count = data.get("prompt_eval_count", 0)
+                output_token_count =  data.get("eval_count",0)
+                aoutput_payload = f"""
+ollama_eval_count{{model="ollama"}} {output_token_count}
+ollama_prompt_eval_count{{model="ollama"}}  {promp_eval_count}
+                """
+                try: 
+                    with open(ametric_file, "w") as f:
+                      f.write(aoutput_payload)
+                      print("FILE WRITE OPERATION DONE!!")
+                except Exception as e:
+                    message = {"error": str(e)}
+                    print(message)
                 
     except Exception as e:
         message = {"error": str(e)}
