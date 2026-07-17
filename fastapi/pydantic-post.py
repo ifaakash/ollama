@@ -7,6 +7,7 @@ import httpx
 
 aollama_url="http://localhost:11434/api/chat"
 amodel="qwen2.5:1.5b"
+ametric_file="/home/ubuntu/ollama/attention/monitoring/random-metric.prom"
 
 
 class ChatRequest(BaseModel):
@@ -48,11 +49,16 @@ async def debug(req: ChatRequest):
             response = await client.post(aollama_url, json=apayload)
             if response.status_code == 200:
                 data = response.json()
+                print(data)
                 llm_response = data.get("response", {})
                 result = {
-                    "promp_eval_count"= llm_response.get("prompt_eval_count",0 )
-                    "output_token_count" =  llm_response.get("eval_count",0)
+                    "message" : data.get("message", {}),
+                    "promp_eval_count" : data.get("prompt_eval_count",0),
+                    "output_token_count" :  data.get("eval_count",0)
                 }
+                with open(ametric_file, "w") as f:
+                  f.write('ollama_eval_count_for_output ', data.get("eval_count",0))
+                
     except Exception as e:
         message = {"error": str(e)}
     elapsed = time.perf_counter() - start
