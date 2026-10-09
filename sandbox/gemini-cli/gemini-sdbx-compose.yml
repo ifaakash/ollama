@@ -5,9 +5,11 @@ services:
      dockerfile: gemini-sdbx.Dockerfile
     image: gemini-sandbox
     container_name: gemini-sandbox
+    network_mode: "host"
     volumes:
      - /Users/aakashmac/DevOps/Github/QuickSpin/:/workspace/QuickSpin
      - /Users/aakashmac/DevOps/Github/Terraform/:/workspace/Terraform
     environment:
      GEMINI_API_KEY: ${GEMINI_API_KEY}
      GEMINI_CLI_TRUST_WORKSPACE: "true"
+     
